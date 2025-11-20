@@ -7,9 +7,9 @@ sample book data.
 
 ## Features
 
--   GET-- Fetch all books\
--   POST -- Add a new book\
--   PUT -- Update a book\
+-   GET-- Fetch all books
+-   POST -- Add a new book
+-   PUT -- Update a book
 -   DELETE-- Remove a book
 
 ## Install Dependencies
