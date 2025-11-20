@@ -28,12 +28,13 @@ Production:
 
 ## API Endpoints
 
-  Method   Endpoint        Description
-  -------- --------------- -----------------
-  GET      /api/book       Get all books
-  POST     /api/book       Create new book
-  PUT      /api/book/:id   Update a book
-  DELETE   /api/book/:id   Delete a book
+  GET- /api/book (Get all books)
+  
+  POST- /api/book (Create new book)
+  
+  PUT- /api/book/:id   (Update a book)
+  
+  DELETE- /api/book/:id   (Delete a book)
 
 ## Notes
 
