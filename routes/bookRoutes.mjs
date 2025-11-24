@@ -1,111 +1,15 @@
 import express from "express";
-import { book } from "../Data.mjs";
-
+import bookController from "../controller/bookController.mjs";
 const router = express.Router();
 
-//GET ALL DETAILS
-router.get("/", (req, res) => {
-  if (!book || book.length === 0) {
-    return res.status(404).json({ error: "No books found" });
-  }
+router
+  .route("/booklist")
+  .get((req, res) => bookController.getAllBook(req, res))
+  .post((req, res) => bookController.addBook(req, res));
 
-  res.status(200).json(book);
-  //res.send(book);
-});
-
-//GET BY ID
-router.get("/:id", (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-
-    if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
-
-    const getBooks = book.find((books) => books.id === id);
-
-    if (!getBooks) return res.status(404).json({ error: "Book not found" });
-
-    res.status(200).json(getBooks);
-  } catch (err) {
-    res.status(500).json({ error: "Server error fetching book" });
-  }
-});
-
-//CREATE BOOK
-router.post("/", (req, res) => {
-  const { body } = req;
-
-  if (!body.title || !body.author || body.price == null) {
-    return res.status(400).json({
-      error: "Atleast (title, author, price) are required",
-    });
-  }
-
-  if (typeof body.price !== "number" || body.price < 0) {
-    return res.status(400).json({
-      error: "Price must be a positive number",
-    });
-  }
-  const isExist = book.find(
-    (b) => b.title.toLowerCase() === body.title.toLowerCase()
-  );
-  if (isExist) {
-    return res.status(409).json({
-      error: "Book already exists",
-    });
-  }
-  try {
-    const newBook = { id: book[book.length - 1].id + 1, ...body };
-    book.push(newBook);
-    res.status(201).send(newBook);
-  } catch (err) {
-    res.status(500).json({ error: "Server error while creating book" });
-  }
-});
-
-//DELETE A BOOK
-router.delete("/:id", (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-
-    if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
-
-    const deleteBooks = book.findIndex((books) => books.id === id);
-    if (deleteBooks === -1)
-      return res.status(404).json({
-        message: "Book not found",
-      });
-
-    book.splice(deleteBooks, 1);
-    res.status(200).json({
-      message: "Book deleted successfully",
-    });
-  } catch (err) {
-    res.status(500).json({ error: "Server error deleting book" });
-  }
-});
-
-//UPDATE THE DETAILS
-
-router.put("/:id", (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-    const updatedData = req.body;
-
-    if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
-
-    let bookIndex = book.findIndex((book) => book.id === id);
-
-    if (bookIndex === -1)
-      return res.status(404).json({ message: "book not found" });
-
-    book[bookIndex] = { ...book[bookIndex], ...updatedData };
-    res.status(200).json({
-      message: "book updated successfully",
-      book: book[bookIndex],
-    });
-  } catch (err) {
-    res.status(500).json({ error: "Server error updating book" });
-  }
-});
-
+router
+  .route("/booklist/:bookId")
+  .get((req, res) => bookController.getById(req, res))
+  .put((req, res) => bookController.updateBook(req, res))
+  .delete((req, res) => bookController.deleteBook(req, res));
 export default router;
